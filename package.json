@@ -1,0 +1,34 @@
+{
+  "name": "arjan-serve",
+  "version": "0.5.0",
+  "description": "live reload server and browser for arjan CLI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arjan-tools/serve.git"
+  },
+  "keywords": [
+    "arjan",
+    "live-reload",
+    "reload",
+    "browser-reload",
+    "browser",
+    "chrome",
+    "refresh"
+  ],
+  "author": "Gabriel Kardonski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arjan-tools/serve/issues"
+  },
+  "homepage": "https://github.com/arjan-tools/serve#readme",
+  "dependencies": {
+    "chrome-launcher": "^0.13.2",
+    "chrome-remote-interface": "^0.28.2",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  }
+}
