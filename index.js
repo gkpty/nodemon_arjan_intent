@@ -2,8 +2,10 @@ var nodemon = require('nodemon');
 const chromeLauncher = require('chrome-launcher');
 const CDP = require('chrome-remote-interface');
 const newFlags = chromeLauncher.Launcher.defaultFlags().filter(flag => flag !== '--disable-setuid-sandbox')
+const express = require('express')
 
 const url = 'http://localhost:8080/index.html'
+const dir = 'dep_pack'
 
 nodemon({
   script: 'app.js',
@@ -24,9 +26,6 @@ async function main(){
   })
   const client = await CDP({port: chrome.port});
   const {Network, Page} = client;
-  Network.requestWillBeSent();
-  await Network.enable();
-  await Page.enable();
   Page.navigate({url: url});
   nodemon.on('start', (data)=>{
     console.log('Starting the server')
@@ -35,13 +34,32 @@ async function main(){
     chromeLauncher.killAll();
     process.exit();
   }).on('restart', async (files) => {
-    console.log('Hello')
-    Page.navigate({url: url})
-    Page.loadEventFired().then((ev) => {
-      console.log('EVENT') 
-      Page.navigate({url: url})
+    let dat = null;
+    let failed = false;
+    Network.requestWillBeSent((data)=> {
+      //console.log('DATA\n', data)
+      dat = data;
     })
-    console.log('FILEEEEEEEEEEEEEEEE ', files[0])
+    Network.loadingFailed((params) => {
+      console.log('ERRORRRRRR', params)
+      failed = true;
+    })
+    //console.log('FILEEEEEEEEEEEEEEEE ', files[0])
+    await Network.enable();
+    await Page.enable();
+    if(files[0].includes(dir)){
+      let newurl = url.split('/index.html')[0] + files[0].split(dir)[1];
+      Page.navigate({url: newurl}).then((resp) => {
+        //console.log(resp)
+        if(resp.errorText){
+          console.log('Errrooorr', resp.errorText)
+          Page.navigate({url: newurl})
+        }
+      })
+    }
+    else {
+      console.log(files[0] + ' is not in the served directory')
+    }
   });
 }
 
