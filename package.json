@@ -28,7 +28,7 @@
   "dependencies": {
     "chrome-launcher": "^0.13.2",
     "chrome-remote-interface": "^0.28.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "nodemon": "^2.0.4"
   }
 }
